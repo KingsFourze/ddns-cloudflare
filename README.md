@@ -20,7 +20,7 @@ A Python3 script that implements DDNS functionality through CloudFlare DNS.
     ```
 4. Set cron job with `crontab -e`
 
-    #### Update every 5 minutes
+    Update every 5 minutes
     
     ```
     */5 * * * *  /usr/bin/python3 /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com]
