@@ -1,10 +1,27 @@
-import sys, urllib3, subprocess, json
-
-http = urllib3.PoolManager()
+import sys, platform, subprocess, urllib3, json
 
 def get_current_ip():
-    result = subprocess.run(["dig", "+short" , "txt", "ch", "whoami.cloudflare", "@1.0.0.1"], stdout=subprocess.PIPE)
-    return result.stdout.decode("utf-8").replace("\n", "").replace('"', '')
+    ip, result, platform_name = "", "", platform.system()
+
+    if platform_name == "Linux":
+        result = subprocess.run(["dig", "+short" , "txt", "chaos", "whoami.cloudflare", "@1.1.1.1"], stdout=subprocess.PIPE).stdout.decode("utf-8")
+        ip = result.strip().replace('"', '')
+    elif platform_name == "Windows":
+        result = subprocess.run(["nslookup", "-type=TXT", "-class=CHAOS", "whoami.cloudflare", "1.1.1.1"], stdout=subprocess.PIPE).stdout.decode("utf-8")
+        try:
+            ip = result.split("text =")[1].strip().replace('"', '')
+        except IndexError:
+            print("[Error] Get IP Failure >>", result)
+            exit(1)
+    else:
+        print("[Error]", platform_name, "is not supported.")
+        exit(1)
+
+    if len(ip) == 0:
+        print("[Error] Get IP Failure >>", result)
+        exit(1)
+
+    return ip
 
 def get_hostname_zone_id():
     r = http.request("GET", "https://api.cloudflare.com/client/v4/zones",
@@ -61,10 +78,12 @@ def update_record(zone_id, host_id, ip):
         print("[Error] Update Failure >>", j)
 
 def main():
-    global CF_TOKEN, DOMAIN, HOSTNAME
+    global http, CF_TOKEN, DOMAIN, HOSTNAME
     if len(sys.argv) != 4:
         print("Usage: python3 ddns_cloudflare.py [CF_TOKEN] [DOMAIN.com] [HOST.DOMAIN.com]")
         exit(1)
+
+    http = urllib3.PoolManager()
 
     CF_TOKEN = sys.argv[1]
     DOMAIN = sys.argv[2]
