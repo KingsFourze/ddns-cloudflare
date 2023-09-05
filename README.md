@@ -27,12 +27,12 @@ A Python3 script that implements DDNS functionality through CloudFlare DNS.
 
     Windows:
       ```
-      python /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com]
+      python /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com] [ipv6_enable: true / false]
       ```
 
     Linux:
       ```
-      python3 /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com]
+      python3 /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com] [ipv6_enable: true / false]
       ```
       
 5. Set a schedule to run script automaticly (Optional)
@@ -47,7 +47,7 @@ A Python3 script that implements DDNS functionality through CloudFlare DNS.
         ```
         # Check and Update every 5 minutes
 
-        */5 * * * *  /usr/bin/python3 /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com]
+        */5 * * * *  /usr/bin/python3 /path/to/ddns_cloudflare.py [CF_TOKEN] [domain.com] [host.domain.com] [ipv6_enable: true / false]
         ```
 
 ## Supported Platform
